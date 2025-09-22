@@ -9,7 +9,7 @@ export default function SmallCard({ image, title, buttonText }) {
         className="absolute inset-0 w-full h-full object-cover"
       />
       <div className="relative z-10">
-        <h3 className="text-xl mb-2">{title}</h3>
+        <div className="text-xl font-semibold mb-2">{title}</div>
         <button className="px-5 py-2 bg-white text-[#ce2829] font-bold rounded-[20px] font-['Roboto_Condensed'] cursor-pointer">
           {buttonText}
         </button>
