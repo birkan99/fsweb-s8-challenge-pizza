@@ -1,6 +1,7 @@
 import HeroBanner from "./HeroBanner";
 import NavItem from "./NavItem";
 import homeBanner from "../../images/iteration-1-images/home-banner.png";
+import Card from "./Card";
 const navItems = [
   { icon: "/images/iteration-2-images/icons/1.svg", label: "YENİ! Kore", href: "/dashboard" },
   { icon: "/images/iteration-2-images/icons/2.svg", label: "Pizza", href: "/team" },
@@ -27,6 +28,7 @@ export default function Home() {
           ))}
         </nav>
       </div>
+      <Card></Card>
     </div>
   );
 }
