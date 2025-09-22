@@ -2,7 +2,7 @@ import homeBanner from "../../images/iteration-1-images/home-banner.png";
 
 export default function Home() {
   return (
-    <>
+    <div>
       <div
         className="h-screen w-screen bg-cover bg-center relative"
         style={{ backgroundImage: `url(${homeBanner})` }}
@@ -30,9 +30,9 @@ export default function Home() {
           </button>
         </div>
       </div>
-      {/* yeni div */}
-      <div className="w-full relative overflow-x-hidden">
-        <nav className="flex justify-center flex-wrap space-x-4">
+      {/* Nav Menüsü */}
+      <div className="w-full relative overflow-x-hidden bg-white py-4">
+        <nav className="flex justify-center flex-wrap gap-10">
           <div className="flex items-center space-x-2">
             <img
               src="/images/iteration-2-images/icons/1.svg"
@@ -52,7 +52,7 @@ export default function Home() {
               src="/images/iteration-2-images/icons/2.svg"
               alt="Pizza"
               className="w-6 h-6"
-            />{" "}
+            />
             <a
               href="/team"
               className="font-me rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
@@ -118,6 +118,6 @@ export default function Home() {
           </div>
         </nav>
       </div>
-    </>
+    </div>
   );
 }
