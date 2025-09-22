@@ -1,121 +1,30 @@
+import HeroBanner from "./HeroBanner";
+import NavItem from "./NavItem";
 import homeBanner from "../../images/iteration-1-images/home-banner.png";
+const navItems = [
+  { icon: "/images/iteration-2-images/icons/1.svg", label: "YENİ! Kore", href: "/dashboard" },
+  { icon: "/images/iteration-2-images/icons/2.svg", label: "Pizza", href: "/team" },
+  { icon: "/images/iteration-2-images/icons/3.svg", label: "Burger", href: "/projects" },
+  { icon: "/images/iteration-2-images/icons/4.svg", label: "Kızartmalar", href: "/reports" },
+  { icon: "/images/iteration-2-images/icons/5.svg", label: "Fast food", href: "/reports" },
+  { icon: "/images/iteration-2-images/icons/6.svg", label: "Gazlı İçecek", href: "/reports" },
+];
 
 export default function Home() {
   return (
     <div>
-      <div
-        className="h-screen w-screen bg-cover bg-center relative"
-        style={{ backgroundImage: `url(${homeBanner})` }}
-      >
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 text-center text-white">
-          {/* En üst yazı */}
-          <h1 className="text-6xl font-['Londrina_Solid']">
-            Teknolojik Yemekler
-          </h1>
+      <HeroBanner bannerImage={homeBanner} />
 
-          {/* Alt yazı */}
-          <p className="text-2xl font-['Satisfy'] mt-2 text-yellow-400 mt-10">
-            {" "}
-            fırsatı kaçırma
-          </p>
-
-          {/* Orta slogan */}
-          <h2 className="text-5xl font-['Roboto_Condensed'] uppercase mt-6">
-            KOD ACIKTIRIR <br /> PİZZA, DOYURUR
-          </h2>
-
-          {/* Buton */}
-          <button className="mt-8 px-10 py-3 text-black font-bold text-xl shadow-lg hover:opacity-90 transition rounded-[50px] font-['Barlow'] bg-yellow-400">
-            Acıktım
-          </button>
-        </div>
-      </div>
-      {/* Nav Menüsü */}
       <div className="w-full relative overflow-x-hidden bg-white py-4">
         <nav className="flex justify-center flex-wrap gap-10">
-          <div className="flex items-center space-x-2">
-            <img
-              src="/images/iteration-2-images/icons/1.svg"
-              alt="Kore"
-              className="w-6 h-6"
+          {navItems.map((item, index) => (
+            <NavItem
+              key={index}
+              icon={item.icon}
+              label={item.label}
+              href={item.href}
             />
-            <a
-              href="/dashboard"
-              className="font-me rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            >
-              YENİ! Kore
-            </a>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <img
-              src="/images/iteration-2-images/icons/2.svg"
-              alt="Pizza"
-              className="w-6 h-6"
-            />
-            <a
-              href="/team"
-              className="font-me rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            >
-              Pizza
-            </a>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <img
-              src="/images/iteration-2-images/icons/3.svg"
-              alt="Burger"
-              className="w-6 h-6"
-            />
-            <a
-              href="/projects"
-              className="font-me rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            >
-              Burger
-            </a>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <img
-              src="/images/iteration-2-images/icons/4.svg"
-              alt="Kızartmalar"
-              className="w-6 h-6"
-            />
-            <a
-              href="/reports"
-              className="font-me rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            >
-              Kızartmalar
-            </a>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <img
-              src="/images/iteration-2-images/icons/5.svg"
-              alt="Fast food"
-              className="w-6 h-6"
-            />
-            <a
-              href="/reports"
-              className="font-me rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            >
-              Fast food
-            </a>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <img
-              src="/images/iteration-2-images/icons/6.svg"
-              alt="Gazlı İçecek"
-              className="w-6 h-6"
-            />
-            <a
-              href="/reports"
-              className="font-me rounded-lg px-3 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900"
-            >
-              Gazlı İçecek
-            </a>
-          </div>
+          ))}
         </nav>
       </div>
     </div>
