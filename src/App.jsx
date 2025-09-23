@@ -1,15 +1,21 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import workintech from '/workintech.svg'
-import './App.css'
-import Home from './components/Home'
+import Home from "./components/Home";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+
+import OrderForm from "./components/OrderForm";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <Home></Home>
-  )
+    <Router>
+      <Switch>
+        <Route path="/order/:id">
+          <OrderForm />
+        </Route>
+        <Route path="/">
+          <Home />
+        </Route>
+      </Switch>
+    </Router>
+  );
 }
 
-export default App
+export default App;

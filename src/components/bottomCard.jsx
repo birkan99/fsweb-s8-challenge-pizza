@@ -1,6 +1,20 @@
-export default function bottomCard({ image, title, score, stock, price }) {
+// bottomCard.jsx
+
+import { useHistory } from "react-router-dom";
+
+export default function bottomCard({ id, image, title, score, stock, price }) {
+  const history = useHistory();
+
+  // Kartın tamamını tıklanabilir hale getiren fonksiyon
+  const handleCardClick = () => {
+    history.push(`/order/${id}`);
+  };
+
    return (
-    <div className="bg-white flex flex-col justify-between w-64 rounded-lg shadow-md p-4">
+    <div
+      onClick={handleCardClick}
+      className="bg-white flex flex-col justify-between w-64 rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow"
+    >
       <div className="w-full h-40 flex items-center justify-center bg-gray-50 rounded-md">
         <img
           src={image}
