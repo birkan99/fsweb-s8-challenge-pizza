@@ -1,7 +1,5 @@
-// OrderForm.jsx
-
 import { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useHistory } from "react-router-dom"; 
 import { foods } from "./data";
 import Footer from "./Footer";
 import Header from "./Header";
@@ -9,6 +7,7 @@ import Header from "./Header";
 export default function OrderForm() {
   const { id } = useParams();
   const food = foods.find((f) => f.id === Number(id));
+  const history = useHistory(); 
 
   if (!food) {
     return <div>Ürün bulunamadı.</div>;
@@ -24,10 +23,9 @@ export default function OrderForm() {
 
   const basePrice = parseFloat(food.price.replace("₺", ""));
   const extraPrice = 5;
-  const total = basePrice + extras.length * extraPrice;
+  const total = (basePrice + extras.length * extraPrice) * quantity;
 
   const toggleExtra = (item) => {
-    // Malzeme sayısı 10'dan az ise yeni malzeme ekle
     if (extras.includes(item)) {
       setExtras(extras.filter((x) => x !== item));
     } else if (extras.length < 10) {
@@ -54,8 +52,19 @@ export default function OrderForm() {
     }
 
     if (valid) {
-      alert("Siparişiniz başarıyla alındı!");
-      // Sipariş gönderme işlemini burada yapabilirsiniz.
+      history.push({
+        pathname: "/success",
+        state: {
+          order: {
+            title: food.title,
+            size: size,
+            dough: dough,
+            extras: extras,
+            total: total,
+            quantity: quantity,
+          },
+        },
+      });
     }
   };
 
@@ -71,7 +80,7 @@ export default function OrderForm() {
           className="w-60 h-60 object-cover"
         />
 
-        {/* Yol Gösterici Metin (Breadcrumb) */}
+        {/*(Breadcrumb) */}
         <div className="w-full text-left mt-8 font-barlow text-gray-500">
           <Link to="/" className="hover:text-yellow-600">Anasayfa</Link>
           <span className="mx-2">&gt;</span>
@@ -154,7 +163,6 @@ export default function OrderForm() {
               <button
                 key={item}
                 type="button"
-                // Ek malzeme sayısı 10'a ulaştıysa butonları devre dışı bırak.
                 disabled={extras.length >= 10 && !extras.includes(item)}
                 className={`px-3 py-2 border rounded ${
                   extras.includes(item) ? "bg-yellow-400" : ""
@@ -182,7 +190,7 @@ export default function OrderForm() {
           <div>
             <p>Seçimler: {extras.length * extraPrice}₺</p>
             <p className="font-bold text-red-600">
-              Toplam: {(total * quantity).toFixed(2)}₺
+              Toplam: {(total).toFixed(2)}₺
             </p>
           </div>
           <div className="flex items-center gap-2">
