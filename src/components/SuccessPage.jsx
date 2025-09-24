@@ -19,34 +19,34 @@ export default function SuccessPage() {
   return (
     <div className="flex flex-col min-h-screen bg-red-600 text-white">
       <Header />
-      <div className="flex-grow flex flex-col justify-center items-center font-barlow text-center p-6">
-        <h2 className="text-4xl sm:text-5xl md:text-6xl font-satisfy text-yellow-400 mb-2">
+      <div className="flex-grow flex flex-col justify-center items-center font-[barlow] text-center p-6">
+        <h2 className="text-4xl sm:text-5xl md:text-4xl font-['Satisfy'] text-yellow-400 mb-2">
           lezzetin yolda
         </h2>
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-roboto-condensed font-extrabold tracking-wider border-b-2 pb-6 mb-8">
-          SİPARİŞ ALINDI
+        <h1 className="text-5xl sm:text-6xl md:text-7xl font-[roboto-condensed] tracking-wider border-b-2 pb-6 mb-10">
+          SİPARİŞ ALINDI  
         </h1>
         <div className="flex flex-col gap-4 text-white text-lg sm:text-xl">
-          <p className="font-semibold text-3xl font-barlow text-center">{title}</p>
+          <p className="font-[semibold] text-3xl  text-center">{title}</p>
           <p>
-            <span className="font-semibold">Boyut:</span> {size}
+            <span className="font-[semibold]">Boyut:</span> {size}
           </p>
           <p>
-            <span className="font-semibold">Hamur:</span> {dough}
+            <span className="font-[semibold]">Hamur:</span> {dough}
           </p>
           {extras.length > 0 && (
             <p>
-              <span className="font-semibold">Ek Malzemeler:</span> {extras.join(", ")}
+              <span className="font-[semibold]">Ek Malzemeler:</span> {extras.join(", ")}
             </p>
           )}
         </div>
-        <div className="bg-white text-gray-800 p-6 rounded-lg shadow-md mt-8 w-full max-w-sm">
-          <h4 className="font-semibold text-2xl mb-4">Sipariş Toplamı</h4>
-          <div className="flex justify-between items-center mb-2">
-            <span className="font-medium">Seçimler:</span>
-            <span className="font-bold">{extras.length * 5}₺</span>
+        <div className=" text-white border-2 p-8 rounded-lg shadow-md mt-10 w-full max-w-sm">
+          <h4 className="font-[semibold] text-2xl mb-4">Sipariş Toplamı</h4>
+          <div className="flex justify-between items-center text-xl mb-2">
+            <span className="font-[medium]">Seçimler:</span>
+            <span className="font-[bold]">{extras.length * 5}₺</span>
           </div>
-          <div className="flex justify-between items-center text-red-600 font-bold text-3xl">
+          <div className="flex justify-between items-center text-2xl">
             <span>Toplam:</span>
             <span>{total.toFixed(2)}₺</span>
           </div>
