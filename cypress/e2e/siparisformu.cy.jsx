@@ -65,16 +65,64 @@ describe("Sipariş Akışı Testleri", () => {
   });
 
   it("Boyut ve hamur seçilmeden sipariş verilememeli", () => {
-    // Sayfanın yeniden yüklenmesi için tekrar ziyaret et
-    cy.visit("http://localhost:5173/order/2");
-
     // Zorunlu alanları (boyut ve hamur) seçmeden sipariş vermeye çalış
     cy.get('button[type="submit"]').click();
 
     // Boyut için hata mesajının göründüğünü doğrula
-    cy.get("p").should("contain", "Lütfen bir boyut seçin.");
+    cy.contains("p", "Lütfen bir boyut seçin.");
 
     // Hamur için hata mesajının göründüğünü doğrula
-    cy.get("p").should("contain", "Lütfen hamur kalınlığı seçin.");
+    cy.contains("p", "Lütfen hamur kalınlığı seçin.");
+  });
+
+  it("Sipariş sonrası bilgilerin başarılı sayfada doğru gösterildiğini doğrulamalı", () => {
+    // 1. Ana sayfaya git ve sipariş formuna yönlen
+    cy.visit("http://localhost:5173/");
+    cy.get('[data-cy="pizza-card"]')
+      .contains("Position Absolute Acı Pizza")
+      .click();
+
+    // 2. Zorunlu alanları ve ekstraları seç
+    cy.contains("button", "M").click();
+    cy.get("select").select("İnce");
+
+    // 3. Ek malzemelerden 2 adet seç
+    cy.contains("button", "Domates").click();
+    cy.contains("button", "Mısır").click();
+
+    // 4. Miktarı artır
+    cy.get("button").contains("+").click(); // Miktar 2 olacak
+
+    // 5. Sipariş notu yaz
+    const siparisNotu = "Lütfen çok fazla peynir ekleyin.";
+    cy.get("textarea").type(siparisNotu);
+
+    // 6. Siparişi ver
+    cy.get('button[type="submit"]').click();
+
+    // 7. Başarı sayfasına yönlendirildiğini kontrol et
+    cy.url().should("include", "/success");
+
+    // 8. Sipariş bilgilerini doğrula
+    // Pizza adı
+    cy.get("h1").should("contain", "SİPARİŞ ALINDI");
+    cy.get(".font-\\[semibold\\]").should(
+      "contain",
+      "Position Absolute Acı Pizza"
+    );
+
+    // Boyut ve Hamur
+    cy.get('p:contains("Boyut: M")').should("exist");
+    cy.get('p:contains("Hamur: İnce")').should("exist");
+
+    // Ek malzemeler
+    cy.get('[data-cy="extras"]').should("contain", "Domates, Mısır");
+
+    // Sipariş notu
+    cy.get("p").should("contain", siparisNotu);
+
+    // Fiyat
+    // Fiyat hesaplaması: (85₺ (pizza) + 2 * 5₺ (ekstra)) * 2 (miktar) = 95 * 2 = 190₺
+    cy.get('div:contains("Toplam:")').should("contain", "190.00₺");
   });
 });

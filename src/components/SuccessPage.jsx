@@ -35,7 +35,7 @@ export default function SuccessPage() {
             <span className="font-[semibold]">Hamur:</span> {dough}
           </p>
           {extras.length > 0 && (
-            <p>
+            <p data-cy="extras">
               <span className="font-[semibold]">Ek Malzemeler:</span>{" "}
               {extras.join(", ")}
             </p>
