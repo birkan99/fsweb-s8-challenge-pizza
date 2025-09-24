@@ -62,6 +62,7 @@ export default function OrderForm() {
             extras: extras,
             total: total,
             quantity: quantity,
+            note: note,
           },
         },
       });
