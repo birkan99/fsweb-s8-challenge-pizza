@@ -90,9 +90,9 @@ export default function OrderForm() {
           <span>Sipariş Oluştur</span>
         </div>
         
-        <h2 className="text-3xl font-semibold mt-4 text-left w-full">
+        <h1 className="text-3xl font-semibold mt-4 text-left w-full">
           {food.title}
-        </h2>
+        </h1>
 
         <div className="w-full text-left mt-2 flex flex-col items-start gap-2">
           <div className="flex gap-2 text-gray-800">

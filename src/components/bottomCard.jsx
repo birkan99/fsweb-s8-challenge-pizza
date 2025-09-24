@@ -13,6 +13,7 @@ export default function bottomCard({ id, image, title, score, stock, price }) {
    return (
     <div
       onClick={handleCardClick}
+      data-cy="pizza-card"
       className="bg-white flex flex-col justify-between w-64 rounded-lg shadow-md p-4 cursor-pointer hover:shadow-lg transition-shadow"
     >
       <div className="w-full h-40 flex items-center justify-center bg-gray-50 rounded-md">

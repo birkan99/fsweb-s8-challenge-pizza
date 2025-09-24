@@ -1,4 +1,4 @@
-import { useHistory } from "react-router-dom"; 
+import { useHistory } from "react-router-dom";
 export default function HeroBanner({ bannerImage }) {
   const history = useHistory();
 
@@ -11,13 +11,16 @@ export default function HeroBanner({ bannerImage }) {
       style={{ backgroundImage: `url(${bannerImage})` }}
     >
       <div className="absolute top-10 left-1/2 -translate-x-1/2 text-center text-white">
-        <h1 className="text-6xl font-['Londrina_Solid']">
+        <h1 className="text-6xl font-['Londrina_Solid']" data-cy="hero-title">
           Teknolojik Yemekler
         </h1>
         <p className="text-2xl font-['Satisfy'] mt-10 text-yellow-400">
           fırsatı kaçırma
         </p>
-        <h2 className="text-5xl font-['Roboto_Condensed'] uppercase mt-6">
+        <h2
+          className="text-5xl font-['Roboto_Condensed'] uppercase mt-6"
+          data-cy="hero-slogan"
+        >
           KOD ACIKTIRIR <br /> PİZZA, DOYURUR
         </h2>
         <button
