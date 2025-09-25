@@ -7,8 +7,6 @@ describe("Tam Sipariş Akışı ve Doğrulama Testleri", () => {
   it("Anasayfa doğru başlık ve sloganı göstermeli ve navigasyon butonları çalışmalı", () => {
     // Ana sayfa başlığını ve sloganını kontrol et
     cy.get("[data-cy=hero-title]").should("contain", "Teknolojik Yemekler");
-
-    // Metinlerin ikisini de içerdiğini doğrulamak
     cy.get("[data-cy=hero-slogan]")
       .should("contain", "KOD ACIKTIRIR")
       .and("contain", "PİZZA, DOYURUR");
