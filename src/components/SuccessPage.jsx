@@ -1,10 +1,15 @@
-import { useLocation } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function SuccessPage() {
   const location = useLocation();
   const order = location.state?.order;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   if (!order) {
     return (

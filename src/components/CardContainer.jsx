@@ -1,4 +1,3 @@
-// CardContainer.jsx
 import Card from "./bottomCard";
 import { foods } from "./data";
 
@@ -9,7 +8,7 @@ export default function CardContainer() {
         {foods.map((food) => (
           <Card
             key={food.id}
-            id={food.id} // Bu satırı ekleyin veya kontrol edin
+            id={food.id} 
             image={food.image}
             title={food.title}
             score={food.score}

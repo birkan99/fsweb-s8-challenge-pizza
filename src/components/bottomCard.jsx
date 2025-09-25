@@ -1,11 +1,8 @@
-// bottomCard.jsx
-
 import { useHistory } from "react-router-dom";
 
 export default function bottomCard({ id, image, title, score, stock, price }) {
   const history = useHistory();
 
-  // Kartın tamamını tıklanabilir hale getiren fonksiyon
   const handleCardClick = () => {
     history.push(`/order/${id}`);
   };

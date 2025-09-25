@@ -1,13 +1,23 @@
-import { useState } from "react";
 import { useParams, Link, useHistory } from "react-router-dom"; 
 import { foods } from "./data";
 import Footer from "./Footer";
 import Header from "./Header";
+import { useEffect, useState } from "react";
 
 export default function OrderForm() {
   const { id } = useParams();
   const food = foods.find((f) => f.id === Number(id));
   const history = useHistory(); 
+
+  useEffect(() => {
+  requestAnimationFrame(() => setTimeout(() => {
+    window.scrollTo(0,0);
+    if (document.scrollingElement) document.scrollingElement.scrollTop = 0;
+    const root = document.getElementById("root");
+    if (root) root.scrollTop = 0;
+  }, 0));
+}, []);
+
 
   if (!food) {
     return <div>Ürün bulunamadı.</div>;
