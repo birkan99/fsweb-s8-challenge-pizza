@@ -1,23 +1,25 @@
-import { useParams, Link, useHistory } from "react-router-dom"; 
+import { useParams, Link, useHistory } from "react-router-dom";
 import { foods } from "./data";
 import Footer from "./Footer";
 import Header from "./Header";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function OrderForm() {
   const { id } = useParams();
   const food = foods.find((f) => f.id === Number(id));
-  const history = useHistory(); 
+  const history = useHistory();
 
   useEffect(() => {
-  requestAnimationFrame(() => setTimeout(() => {
-    window.scrollTo(0,0);
-    if (document.scrollingElement) document.scrollingElement.scrollTop = 0;
-    const root = document.getElementById("root");
-    if (root) root.scrollTop = 0;
-  }, 0));
-}, []);
-
+    requestAnimationFrame(() =>
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        if (document.scrollingElement) document.scrollingElement.scrollTop = 0;
+        const root = document.getElementById("root");
+        if (root) root.scrollTop = 0;
+      }, 0)
+    );
+  }, []);
 
   if (!food) {
     return <div>Ürün bulunamadı.</div>;
@@ -30,6 +32,7 @@ export default function OrderForm() {
   const [quantity, setQuantity] = useState(1);
   const [sizeError, setSizeError] = useState(false);
   const [doughError, setDoughError] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const basePrice = parseFloat(food.price.replace("₺", ""));
   const extraPrice = 5;
@@ -43,7 +46,9 @@ export default function OrderForm() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const isFormValid = size && dough && !loading;
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let valid = true;
 
@@ -62,20 +67,44 @@ export default function OrderForm() {
     }
 
     if (valid) {
-      history.push({
-        pathname: "/success",
-        state: {
-          order: {
-            title: food.title,
-            size: size,
-            dough: dough,
-            extras: extras,
-            total: total,
-            quantity: quantity,
-            note: note,
+      setLoading(true);
+      const payload = {
+        isim: food.title,
+        boyut: size,
+        hamur: dough,
+        malzemeler: extras,
+        adet: quantity,
+        ozel_not: note,
+        toplam: total.toFixed(2),
+      };
+
+      try {
+        const response = await axios.post(
+          "https://reqres.in/api/pizza",
+          payload,
+          {
+            headers: {
+              "x-api-key": "reqres-free-v1",
+            },
+          }
+        );
+        console.log("Sipariş başarıyla gönderildi:", response.data);
+
+        history.push({
+          pathname: "/success",
+          state: {
+            order: {
+              ...payload,
+              id: response.data.id,
+              date: response.data.createdAt,
+            },
           },
-        },
-      });
+        });
+      } catch (error) {
+        console.error("Sipariş gönderilirken bir hata oluştu:", error);
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -93,13 +122,15 @@ export default function OrderForm() {
 
         {/*(Breadcrumb) */}
         <div className="w-full text-left mt-8 font-barlow text-gray-500">
-          <Link to="/" className="hover:text-yellow-600">Anasayfa</Link>
+          <Link to="/" className="hover:text-yellow-600">
+            Anasayfa
+          </Link>
           <span className="mx-2">&gt;</span>
           <span>Seçenekler</span>
           <span className="mx-2">&gt;</span>
           <span>Sipariş Oluştur</span>
         </div>
-        
+
         <h1 className="text-3xl font-semibold mt-4 text-left w-full">
           {food.title}
         </h1>
@@ -113,13 +144,22 @@ export default function OrderForm() {
             </span>
           </div>
           <p className="text-gray-600 mt-2 text-sm w-full">
-            Frontent Dev olarak hala position:absolute kullanıyorsan bu çok acı pizza tam sana göre. Pizza, domates, peynir ve genellikle çeşitli diğer malzemelerle kaplanmış, daha sonra geleneksel olarak odun ateşinde bir fırında yüksek sıcaklıkta pişirilen, genellikle yuvarlak, düzleştirilmiş mayalı buğday bazlı hamurdan oluşan İtalyan kökenli lezzetli bir yemektir. . Küçük bir pizzaya bazen pizzetta denir.
+            Frontent Dev olarak hala position:absolute kullanıyorsan bu çok acı
+            pizza tam sana göre. Pizza, domates, peynir ve genellikle çeşitli
+            diğer malzemelerle kaplanmış, daha sonra geleneksel olarak odun
+            ateşinde bir fırında yüksek sıcaklıkta pişirilen, genellikle
+            yuvarlak, düzleştirilmiş mayalı buğday bazlı hamurdan oluşan İtalyan
+            kökenli lezzetli bir yemektir. . Küçük bir pizzaya bazen pizzetta
+            denir.
           </p>
         </div>
       </div>
 
       {/* Sipariş Formu */}
-      <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-6 bg-white w-full">
+      <form
+        onSubmit={handleSubmit}
+        className="max-w-4xl mx-auto p-6 bg-white w-full"
+      >
         {/* Boyut Seç */}
         <div className="mb-6">
           <h3 className="font-semibold mb-2">Boyut Seç *</h3>
@@ -146,7 +186,9 @@ export default function OrderForm() {
         <div className="mb-6">
           <h3 className="font-semibold mb-2">Hamur Seç *</h3>
           {doughError && (
-            <p className="text-red-500 text-sm mb-2">Lütfen hamur kalınlığı seçin.</p>
+            <p className="text-red-500 text-sm mb-2">
+              Lütfen hamur kalınlığı seçin.
+            </p>
           )}
           <select
             className="border px-3 py-2 rounded w-full"
@@ -164,12 +206,25 @@ export default function OrderForm() {
         <div className="mb-6">
           <h3 className="font-semibold mb-2">Ek Malzemeler (5₺)</h3>
           {extras.length >= 10 && (
-            <p className="text-red-500 text-sm mb-2">En fazla 10 malzeme seçebilirsiniz.</p>
+            <p className="text-red-500 text-sm mb-2">
+              En fazla 10 malzeme seçebilirsiniz.
+            </p>
           )}
           <div className="grid grid-cols-3 gap-2">
             {[
-              "Pepperoni", "Sosis", "Kanada Jambonu", "Tavuk", "Soğan", "Domates",
-              "Mısır", "Jalapeno", "Sarımsak", "Biber", "Sucuk", "Ananas", "Kabak",
+              "Pepperoni",
+              "Sosis",
+              "Kanada Jambonu",
+              "Tavuk",
+              "Soğan",
+              "Domates",
+              "Mısır",
+              "Jalapeno",
+              "Sarımsak",
+              "Biber",
+              "Sucuk",
+              "Ananas",
+              "Kabak",
             ].map((item) => (
               <button
                 key={item}
@@ -177,7 +232,11 @@ export default function OrderForm() {
                 disabled={extras.length >= 10 && !extras.includes(item)}
                 className={`px-3 py-2 border rounded ${
                   extras.includes(item) ? "bg-yellow-400" : ""
-                } ${extras.length >= 10 && !extras.includes(item) ? "opacity-50 cursor-not-allowed" : ""}`}
+                } ${
+                  extras.length >= 10 && !extras.includes(item)
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
                 onClick={() => toggleExtra(item)}
               >
                 {item}
@@ -201,7 +260,7 @@ export default function OrderForm() {
           <div>
             <p>Seçimler: {extras.length * extraPrice}₺</p>
             <p className="font-bold text-red-600">
-              Toplam: {(total).toFixed(2)}₺
+              Toplam: {total.toFixed(2)}₺
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -226,9 +285,14 @@ export default function OrderForm() {
         {/* Buton */}
         <button
           type="submit"
-          className="mt-6 w-full bg-yellow-400 font-semibold py-3 rounded hover:bg-yellow-500"
+          className={`mt-6 w-full font-semibold py-3 rounded ${
+            isFormValid
+              ? "bg-yellow-400 hover:bg-yellow-500"
+              : "bg-gray-400 cursor-not-allowed"
+          }`}
+          disabled={!isFormValid}
         >
-          SİPARİŞ VER
+          {loading ? "Sipariş Gönderiliyor..." : "SİPARİŞ VER"}
         </button>
       </form>
 

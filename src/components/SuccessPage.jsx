@@ -1,66 +1,63 @@
+import { useLocation, useHistory } from "react-router-dom";
+import { useEffect } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
 
 export default function SuccessPage() {
   const location = useLocation();
-  const order = location.state?.order;
+  const history = useHistory();
+  const { order } = location.state || {};
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    if (!order || Object.keys(order).length === 0) {
+      history.push("/");
+    }
+  }, [order, history]);
 
   if (!order) {
-    return (
-      <div className="text-center p-10">
-        Sipariş bilgileri bulunamadı. Lütfen ana sayfaya dönün.
-      </div>
-    );
+    return null;
   }
 
-  const { title, size, dough, extras, total, note } = order;
-
   return (
-    <div className="flex flex-col min-h-screen bg-red-600 text-white">
+    <div className="flex flex-col min-h-screen bg-red-600 font-sans text-white">
       <Header />
-      <div className="flex-grow flex flex-col justify-center items-center font-[barlow] text-center p-6">
-        <h2 className="text-4xl sm:text-5xl md:text-4xl font-['Satisfy'] text-yellow-400 mb-2">
-          lezzetin yolda
-        </h2>
-        <h1 className="text-5xl sm:text-6xl md:text-7xl font-[roboto-condensed] tracking-wider border-b-2 pb-6 mb-10">
+      <div className="flex-grow flex flex-col items-center pt-24 pb-12 text-center">
+        <h1 className="text-4xl font-['Satisfy'] text-yellow-400 mb-4">lezzetin yolda</h1>
+        <h2 className="text-6xl font-barlow-bold tracking-wider uppercase mb-8">
           SİPARİŞ ALINDI
-        </h1>
-        <div className="flex flex-col gap-4 text-white text-lg sm:text-xl">
-          <p className="font-[semibold] text-3xl  text-center">{title}</p>
+        </h2>
+        <hr className="border-t-2 border-white w-1/3 mb-10" />
+
+        <div className="mb-10">
+          <p className="text-2xl font-barlow-bold tracking-wide">
+            {order.isim}
+          </p>
+        </div>
+
+        <div className="text-lg font-barlow-light text-left w-64 mb-10">
           <p>
-            <span className="font-[semibold]">Boyut:</span> {size}
+            <strong>Boyut:</strong> {order.boyut}
           </p>
           <p>
-            <span className="font-[semibold]">Hamur:</span> {dough}
+            <strong>Hamur:</strong> {order.hamur}
           </p>
-          {extras.length > 0 && (
-            <p data-cy="extras">
-              <span className="font-[semibold]">Ek Malzemeler:</span>{" "}
-              {extras.join(", ")}
+          {order.malzemeler && order.malzemeler.length > 0 && (
+            <p className="mt-4">
+              <strong>Ek Malzemeler:</strong> <br />
+              {order.malzemeler.join(", ")}
             </p>
-          )}{" "}
-          {note && ( // Sadece not varsa göster
-            <div className="mt-4">
-              <p className="font-semibold text-lg">Sipariş Notu:</p>
-              <p className="text-white text-md italic">{note}</p>{" "}
-            </div>
           )}
         </div>
-        <div className=" text-white border-2 p-8 rounded-lg shadow-md mt-10 w-full max-w-sm">
-          <h4 className="font-[semibold] text-2xl mb-4">Sipariş Toplamı</h4>
-          <div className="flex justify-between items-center text-xl mb-2">
-            <span className="font-[medium]">Seçimler:</span>
-            <span className="font-[bold]">{extras.length * 5}₺</span>
+
+        <div className="w-64 p-6 border-2 border-white text-left">
+          <h3 className="text-lg font-barlow-bold mb-4">Sipariş Toplamı</h3>
+          <div className="flex justify-between font-barlow-light">
+            <p>Seçimler</p>
+            <p>{(order.malzemeler.length * 5).toFixed(2)}₺</p>
           </div>
-          <div className="flex justify-between items-center text-2xl">
-            <span>Toplam:</span>
-            <span>{total.toFixed(2)}₺</span>
+          <div className="flex justify-between font-barlow-bold mt-2 text-xl">
+            <p>Toplam</p>
+            <p>{order.toplam}₺</p>
           </div>
         </div>
       </div>

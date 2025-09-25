@@ -17,12 +17,12 @@ export default function HeroBanner({ bannerImage }) {
         <p className="text-2xl font-['Satisfy'] mt-10 text-yellow-400">
           fırsatı kaçırma
         </p>
-        <h2
+        <h1
           className="text-5xl font-['Roboto_Condensed'] uppercase mt-6"
           data-cy="hero-slogan"
         >
           KOD ACIKTIRIR <br /> PİZZA, DOYURUR
-        </h2>
+        </h1>
         <button
           onClick={handleOrder}
           className="mt-8 px-10 py-3 text-black font-bold text-xl shadow-lg hover:opacity-90 transition rounded-[50px] font-['Barlow'] bg-yellow-400"
