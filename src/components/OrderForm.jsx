@@ -30,8 +30,10 @@ export default function OrderForm() {
   const [extras, setExtras] = useState([]);
   const [note, setNote] = useState("");
   const [quantity, setQuantity] = useState(1);
+  const [name, setName] = useState("");
   const [sizeError, setSizeError] = useState(false);
   const [doughError, setDoughError] = useState(false);
+  const [nameError, setNameError] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const basePrice = parseFloat(food.price.replace("₺", ""));
@@ -46,7 +48,7 @@ export default function OrderForm() {
     }
   };
 
-  const isFormValid = size && dough && !loading;
+  const isFormValid = size && dough && name.length >= 3 && !loading;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,11 +67,18 @@ export default function OrderForm() {
     } else {
       setDoughError(false);
     }
+    if (name.length < 3) {
+      setNameError(true);
+      valid = false;
+    } else {
+      setNameError(false);
+    }
 
     if (valid) {
       setLoading(true);
       const payload = {
-        isim: food.title,
+        isim: name,
+        urun_isim: food.title,
         boyut: size,
         hamur: dough,
         malzemeler: extras,
@@ -244,6 +253,23 @@ export default function OrderForm() {
             ))}
           </div>
         </div>
+
+        <div className="mb-6">
+          <h3 className="font-semibold mb-2">Adınız Soyadınız *</h3>
+          <input
+            type="text"
+            className="w-full border rounded p-2"
+            placeholder="En az 3 karakter olmalı"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          {nameError && (
+            <p className="text-red-500 text-sm mt-2">
+              Adınız en az 3 karakter olmalıdır.
+            </p>
+          )}
+        </div>
+
         {/* Not */}
         <div className="mb-6">
           <h3 className="font-semibold mb-2">Sipariş Notu</h3>
