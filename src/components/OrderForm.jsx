@@ -253,7 +253,6 @@ export default function OrderForm() {
             ))}
           </div>
         </div>
-
         <div className="mb-6">
           <h3 className="font-semibold mb-2">Adınız Soyadınız *</h3>
           <input
@@ -261,10 +260,18 @@ export default function OrderForm() {
             className="w-full border rounded p-2"
             placeholder="En az 3 karakter olmalı"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setName(value);
+              if (value.length < 3) {
+                setNameError(true);
+              } else {
+                setNameError(false);
+              }
+            }}
           />
           {nameError && (
-            <p className="text-red-500 text-sm mt-2">
+            <p className="text-red-500 text-sm mt-2" data-cy="name-error">
               Adınız en az 3 karakter olmalıdır.
             </p>
           )}
@@ -321,7 +328,6 @@ export default function OrderForm() {
           {loading ? "Sipariş Gönderiliyor..." : "SİPARİŞ VER"}
         </button>
       </form>
-
       <Footer />
     </div>
   );

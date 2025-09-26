@@ -21,7 +21,7 @@ export default function SuccessPage() {
   return (
     <div className="flex flex-col min-h-screen bg-red-600 font-sans text-white">
       <Header />
-      <div className="flex-grow flex flex-col items-center pt-24 pb-12 text-center">
+      <div className="flex-grow flex flex-col items-center pt-12 pb-12 text-center">
         <h1 className="text-4xl font-['Satisfy'] text-yellow-400 mb-4">
           lezzetin yolda
         </h1>

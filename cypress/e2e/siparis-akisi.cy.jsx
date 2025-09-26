@@ -32,10 +32,7 @@ describe("Tam Sipariş Akışı ve Doğrulama Testleri", () => {
     // Sadece pizza ürünlerinin göründüğünü doğrula
     cy.get('[data-cy="pizza-card"]').should("have.length.at.least", 2);
     cy.get('[data-cy="pizza-card"]').should("contain", "Terminal Pizza");
-    cy.get('[data-cy="pizza-card"]').should(
-      "contain",
-      "Position Absolute Acı Pizza"
-    );
+    cy.get('[data-cy="pizza-card"]').should("contain","Position Absolute Acı Pizza");
   });
 
   // --- Sipariş Formu ve Fiyat Testleri ---
@@ -61,32 +58,39 @@ describe("Tam Sipariş Akışı ve Doğrulama Testleri", () => {
     cy.get(".font-bold.text-red-600").should("contain", "190.00₺");
   });
 
-  it("Boyut ve hamur seçilmeden sipariş verilememeli", () => {
+  it("Boyut, hamur ve isim seçilmeden sipariş verilememeli", () => {
     // Bir pizza kartına tıklayarak sipariş formuna git
     cy.get('[data-cy="pizza-card"]')
       .contains("Position Absolute Acı Pizza")
-      .click();
+      .click(); // Boyut ve Hamur seç
 
-    // Zorunlu alanlar seçilmediği için butonun devre dışı olduğunu doğrula
-    cy.get('button[type="submit"]').should("be.disabled");
-
-    // Boyut seç, buton hala devre dışı olmalı
     cy.contains("button", "S").click();
+    cy.get("select").select("İnce"); 
     cy.get('button[type="submit"]').should("be.disabled");
-
-    // Hamur seç, buton artık etkinleşmeli
-    cy.get("select").select("İnce");
-    cy.get('button[type="submit"]').should("not.be.disabled");
+    cy.contains("p", "Adınız en az 3 karakter olmalıdır.").should("not.exist"); // İsim alanına 2 karakter gir
+    cy.get('input[type="text"]').type("Al");
+    cy.get('button[type="submit"]').should("be.disabled"); 
+    cy.get('button[type="submit"]').click({ force: true });
+    cy.wait(100); 
+    cy.get('[data-cy="name-error"]').should("be.visible"); 
+    cy.get('input[type="text"]').type("i"); 
+    cy.get('button[type="submit"]').should("not.be.disabled"); 
+    cy.contains("p", "Adınız en az 3 karakter olmalıdır.").should("not.exist");
   });
 
   // --- Başarılı Sipariş ve Bilgi Kontrolü Testi ---
-  it("Formu doldurup sipariş verdiğinde başarılı sayfaya yönlendirmeli ve tüm bilgileri doğru göstermeli", () => {
+  it("Formu doldurup sipariş verdiğinde başarılı sayfaya yönlendirmeli ve tüm bilgileri doğru göstermeli (İsim dahil)", () => {
+    // Test için kullanılacak isim
+    const testIsim = "Birkan Sarıbacak";
+    const testUrun = "Position Absolute Acı Pizza";
+
     // API isteğini taklit et
     cy.intercept("POST", "https://reqres.in/api/pizza", {
       statusCode: 201,
       body: {
         id: "123",
-        isim: "Position Absolute Acı Pizza",
+        isim: testIsim, 
+        urun_isim: testUrun, 
         boyut: "M",
         hamur: "İnce",
         malzemeler: ["Domates", "Mısır"],
@@ -98,13 +102,12 @@ describe("Tam Sipariş Akışı ve Doğrulama Testleri", () => {
     }).as("postOrder");
 
     // Bir pizza kartına tıklayarak sipariş formuna git
-    cy.get('[data-cy="pizza-card"]')
-      .contains("Position Absolute Acı Pizza")
-      .click();
+    cy.get('[data-cy="pizza-card"]').contains(testUrun).click();
 
     // Gerekli tüm alanları doldur
     cy.contains("button", "M").click();
     cy.get("select").select("İnce");
+    cy.get('input[type="text"]').type(testIsim);
     cy.contains("button", "Domates").click();
     cy.contains("button", "Mısır").click();
     cy.get("button").contains("+").click();
@@ -113,9 +116,10 @@ describe("Tam Sipariş Akışı ve Doğrulama Testleri", () => {
     // Siparişi ver
     cy.get('button[type="submit"]').click();
 
-    // API isteğinin doğru verilerle gönderildiğini doğrula
+    // API isteğinin doğru verilerle gönderildiğini doğrula (Müşteri Adı ve Ürün Adı Kontrolü)
     cy.wait("@postOrder").its("request.body").should("deep.include", {
-      isim: "Position Absolute Acı Pizza",
+      isim: testIsim, // Müşteri adı kontrolü
+      urun_isim: testUrun, // Ürün adı kontrolü
       adet: 2,
     });
 
@@ -124,11 +128,16 @@ describe("Tam Sipariş Akışı ve Doğrulama Testleri", () => {
     cy.contains("h2", "SİPARİŞ ALINDI").should("be.visible");
 
     // Başarı sayfasındaki sipariş bilgilerini doğrula
+    cy.contains(".text-3xl.font-barlow-bold", testUrun).should("be.visible"); // Ürün adı
+    cy.contains("strong", testIsim).should("be.visible"); // Müşteri adı
     cy.contains("p", "Boyut: M").should("be.visible");
     cy.contains("p", "Hamur: İnce").should("be.visible");
     cy.contains("p", "Ek Malzemeler:")
       .parent()
       .should("contain", "Domates, Mısır");
+    cy.contains("p", "Özel Not:")
+      .parent()
+      .should("contain", "çok fazla peynir");
 
     // Toplam fiyatı doğru şekilde kontrol et
     cy.get(".border-2.border-white")
