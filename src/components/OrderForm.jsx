@@ -24,7 +24,9 @@ export default function OrderForm() {
   if (!food) {
     return <div>Ürün bulunamadı.</div>;
   }
-
+  const MIN_EXTRAS = 4;
+  const MAX_EXTRAS = 10;
+  const [extrasError, setExtrasError] = useState(false);
   const [size, setSize] = useState("");
   const [dough, setDough] = useState("");
   const [extras, setExtras] = useState([]);
@@ -43,13 +45,18 @@ export default function OrderForm() {
   const toggleExtra = (item) => {
     if (extras.includes(item)) {
       setExtras(extras.filter((x) => x !== item));
-    } else if (extras.length < 10) {
+    } else if (extras.length < MAX_EXTRAS) {
       setExtras([...extras, item]);
     }
   };
 
-  const isFormValid = size && dough && name.length >= 3 && !loading;
-
+  const isFormValid =
+    size &&
+    dough &&
+    name.length >= 3 &&
+    extras.length >= MIN_EXTRAS &&
+    extras.length <= MAX_EXTRAS &&
+    !loading;
   const handleSubmit = async (e) => {
     e.preventDefault();
     let valid = true;
@@ -72,6 +79,12 @@ export default function OrderForm() {
       valid = false;
     } else {
       setNameError(false);
+    }
+    if (extras.length < MIN_EXTRAS) {
+      setExtrasError(true);
+      valid = false;
+    } else {
+      setExtrasError(false);
     }
 
     if (valid) {
@@ -180,6 +193,7 @@ export default function OrderForm() {
               <button
                 key={s}
                 type="button"
+                data-cy={`size-btn-${s.toLowerCase()}`}
                 className={`px-4 py-2 border rounded ${
                   size === s ? "bg-yellow-400" : ""
                 }`}
@@ -213,10 +227,17 @@ export default function OrderForm() {
 
         {/* Ekstra Malzemeler */}
         <div className="mb-6">
-          <h3 className="font-semibold mb-2">Ek Malzemeler (5₺)</h3>
-          {extras.length >= 10 && (
+          <h3 className="font-semibold mb-2">
+            Ek Malzemeler (Min 4, Max 10) (5₺) *
+          </h3>
+          {extrasError && (
+            <p className="text-red-500 text-sm mb-2" data-cy="extras-min-error">
+              Lütfen en az {MIN_EXTRAS} ek malzeme seçin.
+            </p>
+          )}
+          {extras.length >= MAX_EXTRAS && (
             <p className="text-red-500 text-sm mb-2">
-              En fazla 10 malzeme seçebilirsiniz.
+              En fazla {MAX_EXTRAS} malzeme seçebilirsiniz.
             </p>
           )}
           <div className="grid grid-cols-3 gap-2">
@@ -238,11 +259,12 @@ export default function OrderForm() {
               <button
                 key={item}
                 type="button"
-                disabled={extras.length >= 10 && !extras.includes(item)}
+                disabled={extras.length >= MAX_EXTRAS && !extras.includes(item)}
+                data-cy="extra-ingredient-btn"
                 className={`px-3 py-2 border rounded ${
                   extras.includes(item) ? "bg-yellow-400" : ""
                 } ${
-                  extras.length >= 10 && !extras.includes(item)
+                  extras.length >= MAX_EXTRAS && !extras.includes(item)
                     ? "opacity-50 cursor-not-allowed"
                     : ""
                 }`}
