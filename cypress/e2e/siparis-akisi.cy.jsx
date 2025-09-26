@@ -117,7 +117,7 @@ describe("Sipariş Akışı Testleri", () => {
 
   // --- Başarılı Sipariş Akışı Testi Hata Çözümü ---
   it("Geçerli sipariş sonrası '/success' sayfasına yönlendirilmeli ve veriler doğru olmalı", () => {
-    const testIsim = "Ali Can Test";
+    const testIsim = "Birkan Sarıbacak";
     const testUrun = "Position Absolute Acı Pizza";
     const beklenenToplam = "105.00";
 
